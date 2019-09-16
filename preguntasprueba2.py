@@ -1,60 +1,91 @@
 import json
 from random import randint
+from io import open
 
-tema=['union','interseccion','diferencia']
-rangos=[(1,2),(2,4),(4,6),(6,8),(8,10)]
-rc=0
-ri=0
+temasU1=['union','interseccion','diferencia']
+rangosU1=[(1,2),(2,4),(4,6),(6,8),(8,12)]
+aciertos=0
 nivel=1
+ruta="plantillaU1.json"
 
-for nivel in range(len(rangos)):
-    (low,high) =rangos[nivel]
+#Crear JSON
+def crear_datos(ruta):
+    contenido= open(ruta,"w")
+    dct=[{"A":1},{"P1":1},{"Respuestas":1}]
+    json_str = contenido.write(json.dumps(dct, indent=True))
 
-
+#Creador de conjuntos
 def create(count):
     S=set()
     while len(S) < count:
-        S.add(randint(0,9))
+        S.add(randint(0,20))
     return S
 
-#Falta función para respuestas
-def respi():
-    A=create(rangos(nivel))
-    B=create(rangos(nivel))
-    C=create(rangos(nivel))
-    D=create(rangos(nivel))
+#Función para modificar datos del JSON
+def modificar_datos(ruta,indice,ubicacion,cambio):
+    contenido= open(ruta,"r")
+    plantilla = json.load(contenido)
+    plantilla[indice][ubicacion]=cambio
+    contenido= open(ruta,"w")
+    json.dump(plantilla,contenido,indent=True)
+
+#Entradas de preguntas
+def entradasU1():
+    (low,high) = rangosU1[nivel]
+    A=create(randint(low,high))
+    B=create(randint(low,high)) 
+    A=list(A)
+    B=list(B)
+    modificar_datos(ruta,0,"A",A)
+    modificar_datos(ruta,0,"B",B)
+
+#def resultado():
+def respuestas():
+    (low,high) = rangosU1[nivel]
+    R1=create(randint(low,high))
+    R2=create(randint(low,high))
+    R3=create(randint(low,high))
+    R4=create(randint(low,high))
+    respuestas=[R1,R2,R3,R4]
+    print(respuestas)
 
 
-#Json para la Unidad 1
-U1={}
-U1=[{#Temas de la unidad
-    'Tema1': 'Union',
-    'Tema2': 'Interseccion',
-    'Tema3': 'Diferencia'
-},
-{#Operadores de las preguntas
-    'Operador1': '1',
-    'Operador2': '1'
-},
-{#Respuestas
-    'A': '1',
-    'B': '1',
-    'C': '1',
-    'D': '1'
-},
-{#Aciertos y errores
-    'Aciertos': rc,
-    'Errores': ri       
-},
-{#Rangos para dificultad
-    'Rango1': rangos[1],
-    'Rango2': rangos[2],
-    'Rango3': rangos[3],
-    'Rango4': rangos[4],
-    'Rango5': rangos[5]
-}]
-with open('U1.txt', 'w') as outfile:
-    json.dump(U1, outfile)
-    
-with open('U1.txt','r') as json_file:
-    unidad1 = json.load(json_file)
+
+#Preguntas U1
+def preguntasU1():
+    P1="Cual es la"
+    P2=temasU1
+    P3="de"
+    P4="y"
+    P5="?"
+    modificar_datos(ruta,1,"P1",P1)
+    modificar_datos(ruta,1,"P2",P2)
+    modificar_datos(ruta,1,"P3",P3)
+    modificar_datos(ruta,1,"P4",P4)
+    modificar_datos(ruta,1,"P5",P5)
+
+
+
+
+
+crear_datos(ruta)
+respuestas()
+
+"""
+#Código principal
+for nivel in range(len(rangosU1)):
+    (low,high) = rangosU1[nivel]
+    ResultadoU=A|B
+    ResultadoI=A&B
+    ResultadoD=A-B
+    if ResultadoI==set():
+        ResultadoI="es nula"
+    print("El nivel actual es: "+ str(nivel))
+    print(A)
+    print(B)
+    print("Unión "+ str(ResultadoU))
+    print("Intersección "+ str(ResultadoI))
+    print("Diferencia "+ str(ResultadoD))
+"""
+
+
