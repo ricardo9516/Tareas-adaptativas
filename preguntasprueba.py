@@ -119,6 +119,7 @@ def usuario():
     print("Ingrese su nombre: ")
     nombre=input()
     modificar_datos(ruta,3,"Usuario",nombre)
+    modificar_datos(ruta,3,"Aciertos",0)
 
 #Subir respuestas del usuario al JSON
 def subir_resp(resp_usuario):
@@ -133,29 +134,33 @@ def comp_resp(rc):
         acierto=1
     return acierto
 
-#inicializar JSON
-#crear_datos(ruta)
-
-
+#Sistema de preguntas infinitas
+def preguntas_usuario():
+    while (ver_datos(ruta,3,"Aciertos")<3):
+        entradasU1()
+        respuestasU1(tema_actual)
+        respuesta_correcta=respuestasU1(tema_actual)
+        preguntasU1(tema_actual)
+        mostrar_preguntasU1()
+        mostrar_respuestas()
+        print("Ingrese su respuesta: ")
+        respuesta_usuario=input()
+        subir_resp(respuesta_usuario)
+        comp_resp(respuesta_correcta)
+        if comp_resp(respuesta_correcta)==1:
+            aciertos=ver_datos(ruta,3,"Aciertos")
+            aciertos+=1
+            modificar_datos(ruta,3,"Aciertos",aciertos)
+            print("Correcto! \n")
+        else:
+            print("Incorrecto! \n")
+    print("Terminaste!")
+    modificar_datos(ruta,3,"Aciertos",0)
 
 #Código principal
 
+#inicializar JSON
+#crear_datos(ruta)
 #usuario()
-while (aciertos<3):
-    entradasU1()
-    respuestasU1(tema_actual)
-    respuesta_correcta=respuestasU1(tema_actual)
-    preguntasU1(tema_actual)
-    mostrar_preguntasU1()
-    mostrar_respuestas()
-    print("Ingrese su respuesta: ")
-    respuesta_usuario=input()
-    subir_resp(respuesta_usuario)
-    comp_resp(respuesta_correcta)
-    if comp_resp(respuesta_correcta)==1:
-        aciertos+=1
-        modificar_datos(ruta,3,"Aciertos",aciertos)
-        print("Correcto! \n")
-    else:
-        print("Incorrecto! \n")
-print("Terminaste!")
+
+preguntas_usuario()
