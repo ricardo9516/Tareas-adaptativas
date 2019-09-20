@@ -12,14 +12,17 @@ ruta="plantillaU1.json"
 #Crear JSON
 def crear_datos(ruta):
     contenido= open(ruta,"w")
-    dct=[{"O1":1},{"P1":1},{"A":1},{"Usuario":1}]
+    dct=[{"O1":1},{"P1":1},{"A":1},{"Usuario":1,"Aciertos":0,"Nivel":0},{"T1":1}]
     json_str = contenido.write(json.dumps(dct, indent=True))
 
 #Visualizar datos JSON para crear variables
 def ver_datos(ruta,indice,ubicacion):
     contenido= open(ruta,"r")
     plantilla = json.load(contenido)
-    return plantilla[indice][ubicacion]
+    if indice==4:
+        return plantilla[indice]["Conjuntos"][ubicacion]
+    else:
+        return plantilla[indice][ubicacion]
 
 #Creador de conjuntos
 def create(count):
@@ -35,6 +38,10 @@ def modificar_datos(ruta,indice,ubicacion,cambio):
     plantilla[indice][ubicacion]=cambio
     contenido= open(ruta,"w")
     json.dump(plantilla,contenido,indent=True)
+
+#Temas U1
+def temas():
+    modificar_datos(ruta,4,"Conjuntos",{'union':0,'interseccion':1,'diferencia':2})
 
 #Preguntas U1
 def preguntasU1(tema):
@@ -86,9 +93,9 @@ def respuestasU1(tema):
     O2=ver_datos(ruta,0,"O2")
     O1=set(O1)
     O2=set(O2)
-    respuesta_corrrecta=[(O1|O2),(O1&O2),(O1-O2)]
+    respuesta_correcta=[(O1|O2),(O1&O2),(O1-O2)]
     rc=randint(0,3)
-    respuestas[rc]=respuesta_corrrecta[tema]
+    respuestas[rc]=respuesta_correcta[tema]
     for i in range(4):
         if respuestas[i]==set():
             respuestas[i]="La interseccion es nula"
@@ -136,7 +143,9 @@ def comp_resp(rc):
 
 #Sistema de preguntas infinitas
 def preguntas_usuario():
+    #modificar_datos(ruta,3,"Nivel",0)
     while (ver_datos(ruta,3,"Aciertos")<3):
+        temas()
         entradasU1()
         respuestasU1(tema_actual)
         respuesta_correcta=respuestasU1(tema_actual)
@@ -164,3 +173,4 @@ def preguntas_usuario():
 #usuario()
 
 preguntas_usuario()
+
