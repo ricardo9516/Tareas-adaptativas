@@ -1,11 +1,42 @@
 [
  {
-  "usuario": "Rich"
+  "usuario": [
+   {
+    "Nombre": "Rich"
+   },
+   {
+    "temas_U1": [
+     {
+      "union": 0
+     },
+     {
+      "interseccion": 0
+     },
+     {
+      "diferencia": 0
+     }
+    ]
+   }
+  ]
  },
  {
-  "usuario": "George"
- },
- {
-  "usuario": "Ali"
+  "usuario": [
+   {
+    "Nombre": "George"
+   },
+   {
+    "temas_U1": [
+     {
+      "union": 0
+     },
+     {
+      "interseccion": 0
+     },
+     {
+      "diferencia": 0
+     }
+    ]
+   }
+  ]
  }
 ]
