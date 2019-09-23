@@ -8,21 +8,42 @@ rangosU1=[(1,2),(2,4),(4,6),(6,8),(8,12)]
 aciertos=0
 nivel=0
 ruta="plantillaU1.json"
+ruta2="usuarios.json"
 
 #Crear JSON
 def crear_datos(ruta):
     contenido= open(ruta,"w")
-    dct=[{"O1":1},{"P1":1},{"A":1},{"Usuario":1,"Aciertos":0,"Nivel":0},{"T1":1}]
+    dct=[{"O1":1},{"P1":1},{"A":1},{"T1":1}]
     json_str = contenido.write(json.dumps(dct, indent=True))
+
+#Crea usuarios y mantiene los ya existentes
+def crear_usuario(ruta):
+    contenido= open(ruta,"r")
+    plantilla = json.load(contenido)
+    size=len(plantilla)
+    usuario=input('Cual es su nombre?\n')
+    nuevo_usuario={'usuario': usuario}
+    plantilla.append(nuevo_usuario)
+    ue=0
+    for i in range(size):
+        usuario_registrado=ver_datos(ruta,i,"usuario")
+        if usuario_registrado==usuario:
+            print('Bienvenido '+usuario)
+            ue=1
+    if ue==0:
+        contenido= open(ruta,"w")
+        contenido.write(json.dumps(plantilla,indent=True))       
+        print("Registro exitoso!")
 
 #Visualizar datos JSON para crear variables
 def ver_datos(ruta,indice,ubicacion):
     contenido= open(ruta,"r")
     plantilla = json.load(contenido)
-    if indice==4:
+    if indice==3:
         return plantilla[indice]["Conjuntos"][ubicacion]
     else:
         return plantilla[indice][ubicacion]
+
 
 #Creador de conjuntos
 def create(count):
@@ -121,13 +142,6 @@ def mostrar_respuestas():
         respuesta=set(respuesta)
         print(inic_respuestas[i] + str(respuesta))
 
-#Crear un nuevo usuario
-def usuario():
-    print("Ingrese su nombre: ")
-    nombre=input()
-    modificar_datos(ruta,3,"Usuario",nombre)
-    modificar_datos(ruta,3,"Aciertos",0)
-
 #Subir respuestas del usuario al JSON
 def subir_resp(resp_usuario):
     if resp_usuario=="A" or resp_usuario=="B" or resp_usuario=="C" or resp_usuario=="D":
@@ -170,7 +184,7 @@ def preguntas_usuario():
 
 #inicializar JSON
 #crear_datos(ruta)
-#usuario()
 
-preguntas_usuario()
+#preguntas_usuario()
 
+crear_usuario(ruta2)
