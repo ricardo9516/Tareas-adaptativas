@@ -22,18 +22,40 @@ def crear_usuario(ruta):
     plantilla = json.load(contenido)
     size=len(plantilla)
     usuario=input('Cual es su nombre?\n')
-    nuevo_usuario={'usuario': usuario}
+    nuevo_usuario={'usuario': [{'Nombre':usuario}]}
     plantilla.append(nuevo_usuario)
     ue=0
     for i in range(size):
-        usuario_registrado=ver_datos(ruta,i,"usuario")
+        usuario_registrado=busc_us(ruta,i,'usuario',0,'Nombre')
         if usuario_registrado==usuario:
             print('Bienvenido '+usuario)
             ue=1
     if ue==0:
         contenido= open(ruta,"w")
-        contenido.write(json.dumps(plantilla,indent=True))       
+        contenido.write(json.dumps(plantilla,indent=True))
+        contenido.close()
+        temas_U1("usuarios.json",size)     
         print("Registro exitoso!")
+
+
+#Buscar usuario
+def busc_us(ruta,indice,ubicacion,indice2,ubicacion2):
+    contenido= open(ruta,"r")
+    plantilla = json.load(contenido)
+    return plantilla[indice][ubicacion][indice2][ubicacion2]
+
+
+#Agregar temas de la U1
+def temas_U1(ruta,indice):
+    contenido= open(ruta,"r")
+    plantilla= json.load(contenido)
+    temas_U1 = {'temas_U1':[{'union':0},{'interseccion':0},{'diferencia':0}]}
+    plantilla[indice]['usuario'].append(temas_U1)
+    contenido= open(ruta,"w")
+    json.dump(plantilla,contenido,indent=True)
+    print('Se agrego la Unidad 1')
+
+
 
 #Visualizar datos JSON para crear variables
 def ver_datos(ruta,indice,ubicacion):
@@ -60,9 +82,7 @@ def modificar_datos(ruta,indice,ubicacion,cambio):
     contenido= open(ruta,"w")
     json.dump(plantilla,contenido,indent=True)
 
-#Temas U1
-def temas():
-    modificar_datos(ruta,4,"Conjuntos",{'union':0,'interseccion':1,'diferencia':2})
+
 
 #Preguntas U1
 def preguntasU1(tema):
@@ -184,7 +204,9 @@ def preguntas_usuario():
 
 #inicializar JSON
 #crear_datos(ruta)
+#usuario()
 
 #preguntas_usuario()
 
 crear_usuario(ruta2)
+
