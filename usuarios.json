@@ -2,18 +2,27 @@
  {
   "usuario": [
    {
-    "Nombre": "Rich"
-   },
-   {
+    "Nombre": "Rich",
     "temas_U1": [
      {
-      "union": 0
-     },
-     {
-      "interseccion": 0
-     },
-     {
-      "diferencia": 0
+      "union": [
+       {
+        "nombre": "union",
+        "aciertos": 0
+       }
+      ],
+      "interseccion": [
+       {
+        "nombre": "interseccion",
+        "aciertos": 0
+       }
+      ],
+      "diferencia": [
+       {
+        "nombre": "diferencia",
+        "aciertos": 0
+       }
+      ]
      }
     ]
    }
@@ -22,18 +31,27 @@
  {
   "usuario": [
    {
-    "Nombre": "George"
-   },
-   {
+    "Nombre": "Areli",
     "temas_U1": [
      {
-      "union": 0
-     },
-     {
-      "interseccion": 0
-     },
-     {
-      "diferencia": 0
+      "union": [
+       {
+        "nombre": "union",
+        "aciertos": 0
+       }
+      ],
+      "interseccion": [
+       {
+        "nombre": "interseccion",
+        "aciertos": 0
+       }
+      ],
+      "diferencia": [
+       {
+        "nombre": "diferencia",
+        "aciertos": 0
+       }
+      ]
      }
     ]
    }
