@@ -16,6 +16,23 @@ def crear_datos(ruta):
     dct=[{"O1":1},{"P1":1},{"A":1},{"T1":1}]
     json_str = contenido.write(json.dumps(dct, indent=True))
 
+#Visualizar datos JSON para crear variables
+def ver_datos(ruta,indice,ubicacion):
+    contenido= open(ruta,"r")
+    plantilla = json.load(contenido)
+    """if indice==3:
+        return plantilla[indice]["Conjuntos"][ubicacion]
+    else:
+        return plantilla[indice][ubicacion]"""
+
+#Función para modificar datos del JSON
+def modificar_datos(ruta,indice,ubicacion,cambio):
+    contenido= open(ruta,"r")
+    plantilla = json.load(contenido)
+    plantilla[indice][ubicacion]=cambio
+    contenido= open(ruta,"w")
+    json.dump(plantilla,contenido,indent=True)
+
 #Crea usuarios y mantiene los ya existentes
 def crear_usuario(ruta):
     contenido= open(ruta,"r")
@@ -34,9 +51,9 @@ def crear_usuario(ruta):
         contenido= open(ruta,"w")
         contenido.write(json.dumps(plantilla,indent=True))
         contenido.close()
+        #Aquí se agregan los temas
         temas_U1("usuarios.json",size)     
         print("Registro exitoso!")
-
 
 #Buscar usuario
 def busc_us(ruta,indice,ubicacion,indice2,ubicacion2):
@@ -44,27 +61,27 @@ def busc_us(ruta,indice,ubicacion,indice2,ubicacion2):
     plantilla = json.load(contenido)
     return plantilla[indice][ubicacion][indice2][ubicacion2]
 
-
 #Agregar temas de la U1
 def temas_U1(ruta,indice):
     contenido= open(ruta,"r")
     plantilla= json.load(contenido)
-    temas_U1 = {'temas_U1':[{'union':0},{'interseccion':0},{'diferencia':0}]}
-    plantilla[indice]['usuario'].append(temas_U1)
+    plantilla[indice]['usuario'][0]['temas_U1']=[{'union':[{'nombre':'union','aciertos':0}],
+    'interseccion':[{'nombre':'interseccion','aciertos':0}],
+    'diferencia':[{'nombre':'diferencia','aciertos':0}]}]
     contenido= open(ruta,"w")
     json.dump(plantilla,contenido,indent=True)
     print('Se agrego la Unidad 1')
-
-
-
-#Visualizar datos JSON para crear variables
-def ver_datos(ruta,indice,ubicacion):
+    
+#buscar tema
+def buscar_tema(ruta,indice_u,ubicacion_u,indice_t,ubicacion_t):
     contenido= open(ruta,"r")
-    plantilla = json.load(contenido)
-    if indice==3:
-        return plantilla[indice]["Conjuntos"][ubicacion]
-    else:
-        return plantilla[indice][ubicacion]
+    plantilla= json.load(contenido)
+    return plantilla[indice_u][ubicacion_u][indice_t][ubicacion_t]
+
+#Escoger tema
+def esc_tema():
+    print('Escoja la unidad:')
+
 
 
 #Creador de conjuntos
@@ -73,16 +90,6 @@ def create(count):
     while len(S) < count:
         S.add(randint(1,20))
     return S
-
-#Función para modificar datos del JSON
-def modificar_datos(ruta,indice,ubicacion,cambio):
-    contenido= open(ruta,"r")
-    plantilla = json.load(contenido)
-    plantilla[indice][ubicacion]=cambio
-    contenido= open(ruta,"w")
-    json.dump(plantilla,contenido,indent=True)
-
-
 
 #Preguntas U1
 def preguntasU1(tema):
@@ -96,7 +103,6 @@ def preguntasU1(tema):
     modificar_datos(ruta,1,"P3",P3)
     modificar_datos(ruta,1,"P4",P4)
     modificar_datos(ruta,1,"P5",P5)
-
 
 #Entradas de preguntas
 def entradasU1():
