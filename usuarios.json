@@ -1,9 +1,9 @@
 [
  {
-  "usuario": [
+  "usuario1": [
    {
     "Nombre": "Rich",
-    "temas_U1": [
+    "U1": [
      {
       "union": [
        {
@@ -29,10 +29,68 @@
   ]
  },
  {
-  "usuario": [
+  "usuario2": [
+   {
+    "Nombre": "George",
+    "U1": [
+     {
+      "union": [
+       {
+        "nombre": "union",
+        "aciertos": 0
+       }
+      ],
+      "interseccion": [
+       {
+        "nombre": "interseccion",
+        "aciertos": 0
+       }
+      ],
+      "diferencia": [
+       {
+        "nombre": "diferencia",
+        "aciertos": 0
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "usuario3": [
+   {
+    "Nombre": "Rich2",
+    "U1": [
+     {
+      "union": [
+       {
+        "nombre": "union",
+        "aciertos": 0
+       }
+      ],
+      "interseccion": [
+       {
+        "nombre": "interseccion",
+        "aciertos": 0
+       }
+      ],
+      "diferencia": [
+       {
+        "nombre": "diferencia",
+        "aciertos": 0
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "usuario4": [
    {
     "Nombre": "Areli",
-    "temas_U1": [
+    "U1": [
      {
       "union": [
        {
