@@ -42,20 +42,22 @@ def crear_usuario(ruta):
     nuevo_usuario={'usuario'+str(size+1): [{'Nombre':usuario}]}
     plantilla.append(nuevo_usuario)
     ue=0
-    print(size)
     for i in range(size):
         if ue==0:
             usuario_registrado=busc_us(ruta,i,'usuario'+str(i+1),0,'Nombre')
         if usuario_registrado==usuario and ue==0:
             print('Bienvenido '+usuario)
             ue=1
+            usuario_actual='usuario'+str(i+1)
     if ue==0:
+        usuario_actual='usuario'+str(size+1)
         contenido= open(ruta,"w")
         contenido.write(json.dumps(plantilla,indent=True))
         contenido.close()
         #Aquí se agregan los temas
         temas_U1("usuarios.json",size,'usuario'+str(size+1))     
         print("Registro exitoso!")
+    return usuario_actual
 
 #Buscar usuario
 def busc_us(ruta,indice,ubicacion,indice2,ubicacion2):
@@ -216,5 +218,5 @@ def preguntas_usuario():
 
 #preguntas_usuario()
 
-crear_usuario(ruta2)
+print(crear_usuario(ruta2))
 
