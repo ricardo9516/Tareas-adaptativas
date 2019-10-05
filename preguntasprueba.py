@@ -39,12 +39,14 @@ def crear_usuario(ruta):
     plantilla = json.load(contenido)
     size=len(plantilla)
     usuario=input('Cual es su nombre?\n')
-    nuevo_usuario={'usuario': [{'Nombre':usuario}]}
+    nuevo_usuario={'usuario'+str(size+1): [{'Nombre':usuario}]}
     plantilla.append(nuevo_usuario)
     ue=0
+    print(size)
     for i in range(size):
-        usuario_registrado=busc_us(ruta,i,'usuario',0,'Nombre')
-        if usuario_registrado==usuario:
+        if ue==0:
+            usuario_registrado=busc_us(ruta,i,'usuario'+str(i+1),0,'Nombre')
+        if usuario_registrado==usuario and ue==0:
             print('Bienvenido '+usuario)
             ue=1
     if ue==0:
@@ -52,7 +54,7 @@ def crear_usuario(ruta):
         contenido.write(json.dumps(plantilla,indent=True))
         contenido.close()
         #Aquí se agregan los temas
-        temas_U1("usuarios.json",size)     
+        temas_U1("usuarios.json",size,'usuario'+str(size+1))     
         print("Registro exitoso!")
 
 #Buscar usuario
@@ -62,10 +64,10 @@ def busc_us(ruta,indice,ubicacion,indice2,ubicacion2):
     return plantilla[indice][ubicacion][indice2][ubicacion2]
 
 #Agregar temas de la U1
-def temas_U1(ruta,indice):
+def temas_U1(ruta,indice,usuario):
     contenido= open(ruta,"r")
     plantilla= json.load(contenido)
-    plantilla[indice]['usuario'][0]['temas_U1']=[{'union':[{'nombre':'union','aciertos':0}],
+    plantilla[indice][usuario][0]['U1']=[{'union':[{'nombre':'union','aciertos':0}],
     'interseccion':[{'nombre':'interseccion','aciertos':0}],
     'diferencia':[{'nombre':'diferencia','aciertos':0}]}]
     contenido= open(ruta,"w")
@@ -81,7 +83,7 @@ def buscar_tema(ruta,indice_u,ubicacion_u,indice_t,ubicacion_t):
 #Escoger tema
 def esc_tema():
     print('Escoja la unidad:')
-
+    print('i=A')
 
 
 #Creador de conjuntos
