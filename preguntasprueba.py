@@ -41,23 +41,26 @@ def crear_usuario(ruta):
     usuario=input('Cual es su nombre?\n')
     nuevo_usuario={'usuario'+str(size+1): [{'Nombre':usuario}]}
     plantilla.append(nuevo_usuario)
-    ue=0
+    usu_exis=0
     for i in range(size):
-        if ue==0:
+        if usu_exis==0:
             usuario_registrado=busc_us(ruta,i,'usuario'+str(i+1),0,'Nombre')
-        if usuario_registrado==usuario and ue==0:
+        if usuario_registrado==usuario:
             print('Bienvenido '+usuario)
-            ue=1
+            usu_exis=1
             usuario_actual='usuario'+str(i+1)
-    if ue==0:
+            indice=i
+            break
+    if usu_exis==0:
         usuario_actual='usuario'+str(size+1)
+        indice=size
         contenido= open(ruta,"w")
         contenido.write(json.dumps(plantilla,indent=True))
         contenido.close()
         #Aquí se agregan los temas
         temas_U1("usuarios.json",size,'usuario'+str(size+1))     
         print("Registro exitoso!")
-    return usuario_actual
+    return indice,usuario_actual
 
 #Buscar usuario
 def busc_us(ruta,indice,ubicacion,indice2,ubicacion2):
@@ -69,23 +72,48 @@ def busc_us(ruta,indice,ubicacion,indice2,ubicacion2):
 def temas_U1(ruta,indice,usuario):
     contenido= open(ruta,"r")
     plantilla= json.load(contenido)
-    plantilla[indice][usuario][0]['U1']=[{'union':[{'nombre':'union','aciertos':0}],
-    'interseccion':[{'nombre':'interseccion','aciertos':0}],
-    'diferencia':[{'nombre':'diferencia','aciertos':0}]}]
+    plantilla[indice][usuario][0]['U1']=[{'nombre':'union','aciertos':0,'nivel':1},
+    {'nombre':'interseccion','aciertos':0,'nivel':1},
+    {'nombre':'diferencia','aciertos':0,'nivel':1}]
     contenido= open(ruta,"w")
     json.dump(plantilla,contenido,indent=True)
     print('Se agrego la Unidad 1')
     
 #buscar tema
-def buscar_tema(ruta,indice_u,ubicacion_u,indice_t,ubicacion_t):
+def buscar_tema(ruta,indice_u,ubicacion_u,indice_unidad,ubicacion_unidad,indice_t,ubicacion_t):
     contenido= open(ruta,"r")
     plantilla= json.load(contenido)
-    return plantilla[indice_u][ubicacion_u][indice_t][ubicacion_t]
+    return plantilla[indice_u][ubicacion_u][indice_unidad][ubicacion_unidad][indice_t][ubicacion_t]
+
+#buscar unidad
+def buscar_unidad(ruta,indice_u,ubicacion_u,indice_unidad,ubicacion_unidad):
+    contenido= open(ruta,"r")
+    plantilla= json.load(contenido)
+    return plantilla[indice_u][ubicacion_u][indice_unidad][ubicacion_unidad]
 
 #Escoger tema
-def esc_tema():
-    print('Escoja la unidad:')
-    print('i=A')
+def esc_tema(ruta,indice,usuario):
+    t=0
+    print('Ingrese la unidad:')
+    while(t==0):
+        unidad=input('U1=Conjuntos U2=Cambio de base\n')
+        if unidad=='U1' or unidad=='U2':
+            while (t==0):
+                #Visualizacion de temas en consola
+                print('Ingrese el nombre del tema: ')
+                for i in range(len(buscar_unidad(ruta,indice,usuario,0,unidad))):
+                    print(buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,i,'nombre')+' = '+'Tema'+str(i+1))
+                #Guardar el tema actual en caso de que sea uno existente
+                tema_actual=input()
+                for i in range(len(buscar_unidad(ruta,indice,usuario,0,unidad))):
+                    if tema_actual==buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,i,'nombre'):
+                        print('Bienvenido al tema: '+tema_actual)
+                        t=1
+                        break
+        else:
+            print('Ingrese una unidad disponible por favor: ')
+    return(tema_actual)
+
 
 
 #Creador de conjuntos
@@ -189,7 +217,6 @@ def comp_resp(rc):
 def preguntas_usuario():
     #modificar_datos(ruta,3,"Nivel",0)
     while (ver_datos(ruta,3,"Aciertos")<3):
-        temas()
         entradasU1()
         respuestasU1(tema_actual)
         respuesta_correcta=respuestasU1(tema_actual)
@@ -218,5 +245,5 @@ def preguntas_usuario():
 
 #preguntas_usuario()
 
-print(crear_usuario(ruta2))
-
+(indice_usuario,usuario_actual)=(crear_usuario(ruta2))
+print(esc_tema(ruta2,indice_usuario,usuario_actual))
