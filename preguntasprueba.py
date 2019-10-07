@@ -3,10 +3,7 @@ from random import randint
 from io import open
 
 temasU1=["union","interseccion","diferencia"]
-tema_actual=0
 rangosU1=[(1,2),(2,4),(4,6),(6,8),(8,12)]
-aciertos=0
-nivel=0
 ruta="plantillaU1.json"
 ruta2="usuarios.json"
 
@@ -20,10 +17,7 @@ def crear_datos(ruta):
 def ver_datos(ruta,indice,ubicacion):
     contenido= open(ruta,"r")
     plantilla = json.load(contenido)
-    """if indice==3:
-        return plantilla[indice]["Conjuntos"][ubicacion]
-    else:
-        return plantilla[indice][ubicacion]"""
+    return plantilla[indice][ubicacion]
 
 #Función para modificar datos del JSON
 def modificar_datos(ruta,indice,ubicacion,cambio):
@@ -109,10 +103,11 @@ def esc_tema(ruta,indice,usuario):
                     if tema_actual==buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,i,'nombre'):
                         print('Bienvenido al tema: '+tema_actual)
                         t=1
+                        indice_tema=i
                         break
         else:
             print('Ingrese una unidad disponible por favor: ')
-    return(tema_actual)
+    return indice_tema,unidad
 
 
 
@@ -137,7 +132,7 @@ def preguntasU1(tema):
     modificar_datos(ruta,1,"P5",P5)
 
 #Entradas de preguntas
-def entradasU1():
+def entradasU1(nivel):
     (low,high) = rangosU1[nivel]
     A=create(randint(low,high))
     B=create(randint(low,high)) 
@@ -161,7 +156,7 @@ def mostrar_preguntasU1():
     print(pregunta_final[0]+pregunta_final[1]+pregunta_final[2]+str(mostrar_entradas_con("O1"))+pregunta_final[3]+str(mostrar_entradas_con("O2"))+pregunta_final[4])
 
 #def resultado():
-def respuestasU1(tema):
+def respuestasU1(tema,nivel):
     (low,high) = rangosU1[nivel]
     R1=create(randint(low,high))
     R2=create(randint(low,high))
@@ -213,14 +208,22 @@ def comp_resp(rc):
         acierto=1
     return acierto
 
+def aumentar_aciertos(ruta,indice_u,ubicacion_u,indice_unidad,ubicacion_unidad,indice_t,ubicacion_t,cambio):
+    contenido= open(ruta,"r")
+    plantilla = json.load(contenido)
+    plantilla[indice_u][ubicacion_u][indice_unidad][ubicacion_unidad][indice_t][ubicacion_t]=cambio
+    contenido= open(ruta,"w")
+    json.dump(plantilla,contenido,indent=True)
+
 #Sistema de preguntas infinitas
-def preguntas_usuario():
-    #modificar_datos(ruta,3,"Nivel",0)
-    while (ver_datos(ruta,3,"Aciertos")<3):
-        entradasU1()
-        respuestasU1(tema_actual)
-        respuesta_correcta=respuestasU1(tema_actual)
-        preguntasU1(tema_actual)
+def preguntas_usuario(indice_usuario,usuario_actual,indice_tema,unidad):
+    nivel=buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,indice_tema,'nivel')
+    print('Empezemos con el nivel '+str(nivel))
+    while (buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,indice_tema,'aciertos')<3):
+        entradasU1(nivel)
+        respuestasU1(indice_tema,nivel)
+        respuesta_correcta=respuestasU1(indice_tema,nivel)
+        preguntasU1(indice_tema)
         mostrar_preguntasU1()
         mostrar_respuestas()
         print("Ingrese su respuesta: ")
@@ -228,9 +231,9 @@ def preguntas_usuario():
         subir_resp(respuesta_usuario)
         comp_resp(respuesta_correcta)
         if comp_resp(respuesta_correcta)==1:
-            aciertos=ver_datos(ruta,3,"Aciertos")
+            aciertos=buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,indice_tema,'aciertos')
             aciertos+=1
-            modificar_datos(ruta,3,"Aciertos",aciertos)
+            aumentar_aciertos(ruta2,indice_usuario,usuario_actual,0,unidad,indice_tema,'aciertos',aciertos)
             print("Correcto! \n")
         else:
             print("Incorrecto! \n")
@@ -243,7 +246,11 @@ def preguntas_usuario():
 #crear_datos(ruta)
 #usuario()
 
-#preguntas_usuario()
+
 
 (indice_usuario,usuario_actual)=(crear_usuario(ruta2))
-print(esc_tema(ruta2,indice_usuario,usuario_actual))
+(indice_tema,unidad)=esc_tema(ruta2,indice_usuario,usuario_actual)
+
+preguntas_usuario(indice_usuario,usuario_actual,indice_tema,unidad)
+
+
