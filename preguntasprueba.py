@@ -2,15 +2,13 @@ import json
 from random import randint
 from io import open
 
-temasU1=["union","interseccion","diferencia"]
-rangosU1=[(1,2),(2,4),(4,6),(6,8),(8,12)]
 ruta="plantillaU1.json"
 ruta2="usuarios.json"
 
 #Crear JSON
 def crear_datos(ruta):
     contenido= open(ruta,"w")
-    dct=[{"O1":1},{"P1":1},{"A":1},{"T1":1}]
+    dct=[{"O1":1},{"P1":1},{"A":1},{"Respuesta usuario":1},{"rangosU1":[(1,2),(2,4),(4,6),(6,8),(8,12)]}]
     json_str = contenido.write(json.dumps(dct, indent=True))
 
 #Visualizar datos JSON para crear variables
@@ -74,16 +72,16 @@ def temas_U1(ruta,indice,usuario):
     print('Se agrego la Unidad 1')
     
 #buscar tema
-def buscar_tema(ruta,indice_u,ubicacion_u,indice_unidad,ubicacion_unidad,indice_t,ubicacion_t):
+def buscar_tema(ruta,indice_u,ubicacion_u,ubicacion_unidad,indice_t,ubicacion_t):
     contenido= open(ruta,"r")
     plantilla= json.load(contenido)
-    return plantilla[indice_u][ubicacion_u][indice_unidad][ubicacion_unidad][indice_t][ubicacion_t]
+    return plantilla[indice_u][ubicacion_u][0][ubicacion_unidad][indice_t][ubicacion_t]
 
 #buscar unidad
-def buscar_unidad(ruta,indice_u,ubicacion_u,indice_unidad,ubicacion_unidad):
+def buscar_unidad(ruta,indice_u,ubicacion_u,ubicacion_unidad):
     contenido= open(ruta,"r")
     plantilla= json.load(contenido)
-    return plantilla[indice_u][ubicacion_u][indice_unidad][ubicacion_unidad]
+    return plantilla[indice_u][ubicacion_u][0][ubicacion_unidad]
 
 #Escoger tema
 def esc_tema(ruta,indice,usuario):
@@ -95,12 +93,12 @@ def esc_tema(ruta,indice,usuario):
             while (t==0):
                 #Visualizacion de temas en consola
                 print('Ingrese el nombre del tema: ')
-                for i in range(len(buscar_unidad(ruta,indice,usuario,0,unidad))):
-                    print(buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,i,'nombre')+' = '+'Tema'+str(i+1))
+                for i in range(len(buscar_unidad(ruta,indice,usuario,unidad))):
+                    print(buscar_tema(ruta2,indice_usuario,usuario_actual,unidad,i,'nombre')+' = '+'Tema'+str(i+1))
                 #Guardar el tema actual en caso de que sea uno existente
                 tema_actual=input()
-                for i in range(len(buscar_unidad(ruta,indice,usuario,0,unidad))):
-                    if tema_actual==buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,i,'nombre'):
+                for i in range(len(buscar_unidad(ruta,indice,usuario,unidad))):
+                    if tema_actual==buscar_tema(ruta2,indice_usuario,usuario_actual,unidad,i,'nombre'):
                         print('Bienvenido al tema: '+tema_actual)
                         t=1
                         indice_tema=i
@@ -108,8 +106,6 @@ def esc_tema(ruta,indice,usuario):
         else:
             print('Ingrese una unidad disponible por favor: ')
     return indice_tema,unidad
-
-
 
 #Creador de conjuntos
 def create(count):
@@ -119,9 +115,9 @@ def create(count):
     return S
 
 #Preguntas U1
-def preguntasU1(tema):
+def preguntasU1(ru,indice_u,ubicacion_u,ubicacion_unidad,indice_t):
     P1="Cual es la "
-    P2=temasU1[tema]
+    P2=buscar_tema(ru,indice_u,ubicacion_u,ubicacion_unidad,indice_t,'nombre')
     P3=" de "
     P4=" y "
     P5="?"
@@ -132,8 +128,8 @@ def preguntasU1(tema):
     modificar_datos(ruta,1,"P5",P5)
 
 #Entradas de preguntas
-def entradasU1(nivel):
-    (low,high) = rangosU1[nivel]
+def entradasU1(ru,indice_u,ubicacion_u,ubicacion_unidad,indice_t):
+    (low,high) = ver_datos(ruta,4,'rangosU1')[buscar_tema(ru,indice_u,ubicacion_u,ubicacion_unidad,indice_t,'nivel')]
     A=create(randint(low,high))
     B=create(randint(low,high)) 
     A=list(A)
@@ -157,7 +153,7 @@ def mostrar_preguntasU1():
 
 #def resultado():
 def respuestasU1(tema,nivel):
-    (low,high) = rangosU1[nivel]
+    (low,high) = ver_datos(ruta,4,'rangosU1')[nivel]
     R1=create(randint(low,high))
     R2=create(randint(low,high))
     R3=create(randint(low,high))
@@ -173,18 +169,13 @@ def respuestasU1(tema,nivel):
     for i in range(4):
         if respuestas[i]==set():
             respuestas[i]="La interseccion es nula"
-            print("Respuesta= "+ respuestas[i])
         else:
             respuestas[i]=list(respuestas[i])
     respuestas_JSON=["A","B","C","D"]
     for i in range(4):
         modificar_datos(ruta,2,respuestas_JSON[i],respuestas[i])
     return respuestas_JSON[rc]
-    """#Visualizar en la consola
-    print(respuestas)
-    print("A= "+ str(O1))
-    print("B= "+ str(O2))
-    print("Respuesta= "+str(respuestas[rc]))"""
+
 
 #Mostrar respuestas
 def mostrar_respuestas():
@@ -192,8 +183,11 @@ def mostrar_respuestas():
     inic_respuestas=["A= ","B= ","C= ","D= "]
     for i in range(4):
         respuesta=ver_datos(ruta,2,respuestas_JSON[i])
-        respuesta=set(respuesta)
-        print(inic_respuestas[i] + str(respuesta))
+        if type(respuesta)==list:
+            respuesta=set(respuesta)
+            print(inic_respuestas[i] + str(respuesta))
+        else:
+            print(inic_respuestas[i] + str(respuesta))
 
 #Subir respuestas del usuario al JSON
 def subir_resp(resp_usuario):
@@ -208,22 +202,22 @@ def comp_resp(rc):
         acierto=1
     return acierto
 
-def aumentar_aciertos(ruta,indice_u,ubicacion_u,indice_unidad,ubicacion_unidad,indice_t,ubicacion_t,cambio):
+def aumentar_aciertos(ruta,indice_u,ubicacion_u,ubicacion_unidad,indice_t,ubicacion_t,cambio):
     contenido= open(ruta,"r")
     plantilla = json.load(contenido)
-    plantilla[indice_u][ubicacion_u][indice_unidad][ubicacion_unidad][indice_t][ubicacion_t]=cambio
+    plantilla[indice_u][ubicacion_u][0][ubicacion_unidad][indice_t][ubicacion_t]=cambio
     contenido= open(ruta,"w")
     json.dump(plantilla,contenido,indent=True)
 
 #Sistema de preguntas infinitas
-def preguntas_usuario(indice_usuario,usuario_actual,indice_tema,unidad):
-    nivel=buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,indice_tema,'nivel')
+def preguntas_usuario(indice_usuario,usuario_actual,unidad,indice_tema):
+    nivel=buscar_tema(ruta2,indice_usuario,usuario_actual,unidad,indice_tema,'nivel')
     print('Empezemos con el nivel '+str(nivel))
-    while (buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,indice_tema,'aciertos')<3):
-        entradasU1(nivel)
+    while (buscar_tema(ruta2,indice_usuario,usuario_actual,unidad,indice_tema,'aciertos')<5):
+        entradasU1(ruta2,indice_usuario,usuario_actual,unidad,indice_tema)
         respuestasU1(indice_tema,nivel)
         respuesta_correcta=respuestasU1(indice_tema,nivel)
-        preguntasU1(indice_tema)
+        preguntasU1(ruta2,indice_usuario,usuario_actual,unidad,indice_tema)
         mostrar_preguntasU1()
         mostrar_respuestas()
         print("Ingrese su respuesta: ")
@@ -231,26 +225,20 @@ def preguntas_usuario(indice_usuario,usuario_actual,indice_tema,unidad):
         subir_resp(respuesta_usuario)
         comp_resp(respuesta_correcta)
         if comp_resp(respuesta_correcta)==1:
-            aciertos=buscar_tema(ruta2,indice_usuario,usuario_actual,0,unidad,indice_tema,'aciertos')
+            aciertos=buscar_tema(ruta2,indice_usuario,usuario_actual,unidad,indice_tema,'aciertos')
             aciertos+=1
-            aumentar_aciertos(ruta2,indice_usuario,usuario_actual,0,unidad,indice_tema,'aciertos',aciertos)
+            aumentar_aciertos(ruta2,indice_usuario,usuario_actual,unidad,indice_tema,'aciertos',aciertos)
             print("Correcto! \n")
         else:
             print("Incorrecto! \n")
     print("Terminaste!")
-    modificar_datos(ruta,3,"Aciertos",0)
 
 #Código principal
 
-#inicializar JSON
+#inicializar JSON U1
 #crear_datos(ruta)
-#usuario()
 
-
-
+#Crear usuario y empezar curso
 (indice_usuario,usuario_actual)=(crear_usuario(ruta2))
 (indice_tema,unidad)=esc_tema(ruta2,indice_usuario,usuario_actual)
-
-preguntas_usuario(indice_usuario,usuario_actual,indice_tema,unidad)
-
-
+preguntas_usuario(indice_usuario,usuario_actual,unidad,indice_tema)
