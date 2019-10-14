@@ -77,6 +77,14 @@ def buscar_tema(ruta,indice_u,ubicacion_u,ubicacion_unidad,indice_t,ubicacion_t)
     plantilla= json.load(contenido)
     return plantilla[indice_u][ubicacion_u][0][ubicacion_unidad][indice_t][ubicacion_t]
 
+#buscar tema
+def subir_nivel(ruta,indice_u,ubicacion_u,ubicacion_unidad,indice_t):
+    contenido= open(ruta,"r")
+    plantilla= json.load(contenido)
+    plantilla[indice_u][ubicacion_u][0][ubicacion_unidad][indice_t]['nivel']+=1
+    contenido= open(ruta,"w")
+    json.dump(plantilla,contenido,indent=True)
+
 #buscar unidad
 def buscar_unidad(ruta,indice_u,ubicacion_u,ubicacion_unidad):
     contenido= open(ruta,"r")
@@ -94,11 +102,11 @@ def esc_tema(ruta,indice,usuario):
                 #Visualizacion de temas en consola
                 print('Ingrese el nombre del tema: ')
                 for i in range(len(buscar_unidad(ruta,indice,usuario,unidad))):
-                    print(buscar_tema(ruta2,indice_usuario,usuario_actual,unidad,i,'nombre')+' = '+'Tema'+str(i+1))
+                    print(buscar_tema(ruta,indice_usuario,usuario_actual,unidad,i,'nombre')+' = '+'Tema'+str(i+1))
                 #Guardar el tema actual en caso de que sea uno existente
                 tema_actual=input()
                 for i in range(len(buscar_unidad(ruta,indice,usuario,unidad))):
-                    if tema_actual==buscar_tema(ruta2,indice_usuario,usuario_actual,unidad,i,'nombre'):
+                    if tema_actual==buscar_tema(ruta,indice_usuario,usuario_actual,unidad,i,'nombre'):
                         print('Bienvenido al tema: '+tema_actual)
                         t=1
                         indice_tema=i
@@ -209,6 +217,14 @@ def aumentar_aciertos(ruta,indice_u,ubicacion_u,ubicacion_unidad,indice_t,ubicac
     contenido= open(ruta,"w")
     json.dump(plantilla,contenido,indent=True)
 
+def resetear_aciertos(ruta,indice_u,ubicacion_u,ubicacion_unidad,indice_t,ubicacion_t):
+    contenido= open(ruta,"r")
+    plantilla = json.load(contenido)
+    plantilla[indice_u][ubicacion_u][0][ubicacion_unidad][indice_t][ubicacion_t]=0
+    contenido= open(ruta,"w")
+    json.dump(plantilla,contenido,indent=True)
+
+
 #Sistema de preguntas infinitas
 def preguntas_usuario(indice_usuario,usuario_actual,unidad,indice_tema):
     nivel=buscar_tema(ruta2,indice_usuario,usuario_actual,unidad,indice_tema,'nivel')
@@ -231,7 +247,13 @@ def preguntas_usuario(indice_usuario,usuario_actual,unidad,indice_tema):
             print("Correcto! \n")
         else:
             print("Incorrecto! \n")
-    print("Terminaste!")
+
+    print("Terminaste el nivel "+ str(buscar_tema(ruta2,indice_usuario,usuario_actual,unidad,indice_tema,'nivel')))
+    subir_nivel(ruta2,indice_usuario,usuario_actual,unidad,indice_tema)
+    resetear_aciertos(ruta2,indice_usuario,usuario_actual,unidad,indice_tema,'aciertos')
+
+
+
 
 #Código principal
 
@@ -242,3 +264,7 @@ def preguntas_usuario(indice_usuario,usuario_actual,unidad,indice_tema):
 (indice_usuario,usuario_actual)=(crear_usuario(ruta2))
 (indice_tema,unidad)=esc_tema(ruta2,indice_usuario,usuario_actual)
 preguntas_usuario(indice_usuario,usuario_actual,unidad,indice_tema)
+
+
+
+#PRUEBAS
